@@ -1,0 +1,7 @@
+version: '3'
+services:
+  openapi-generator:
+    image: openapitools/openapi-generator-cli
+    command: generate -i /project/school.openapi.yml -g typescript-node -o /project/school
+    volumes:
+      - .:/project
