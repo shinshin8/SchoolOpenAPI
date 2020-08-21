@@ -1,0 +1,155 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: OpenAPI
+paths:
+  '/students':
+    get:
+      summary: List students
+      operationId: listStudents
+      tags:
+        - ListStudents
+      parameters:
+        - $ref: '#/components/parameters/gender'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/order'
+        - $ref: '#/components/parameters/orderBy'
+      responses:
+        200:
+          description: 'List of students'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComponentStudentList'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/ResourceNotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+  '/addStudent':
+    post:
+      summary: Add a student
+      operationId: addStudent
+      tags:
+        - addStudent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComponentStudent'
+      responses:
+        200:
+          description: 'Added a student'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/ResourceNotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+  '/updateStudent':
+    put:
+      summary: Update Student Info
+      operationId: updateStudent
+      tags:
+        - updateStudent
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: 'update student info'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/ResourceNotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+  '/deleteStudent':
+    delete:
+      summary: Delete Student
+      operationId: deleteStudent
+      tags:
+        - deleteStudent
+      parameters:
+        - $ref: '#/components/parameters/id'
+      responses:
+        200:
+          description: 'delete a student'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        404:
+          $ref: '#/components/responses/ResourceNotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+components:
+  responses:
+    BadRequest:
+      description: 'Bad Request'
+    ResourceNotFound:
+      description: 'Resource Not Found'
+    InternalServerError:
+      description: 'Internal Server Error'
+  schemas:
+    GenderEnum:
+      enum:
+        - male
+        - female
+    ComponentStudentList:
+      properties:
+        total:
+          type: integer
+          format: int64
+        students:
+          type: array
+          items:
+            $ref: '#/components/schemas/ComponentStudent'
+    ComponentStudent:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        gender:
+          $ref: '#/components/schemas/GenderEnum'
+        favoriteSubject:
+          type: string
+        height:
+          type: string
+  parameters:
+    id:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    gender:
+      name: gender
+      in: query
+      required: false
+      schema:
+        type: string
+    limit:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+        maximum: 100
+    orderBy:
+      name: order_by
+      in: query
+      required: false
+      schema:
+        type: string
+    order:
+      name: order
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: [desc, asc]
+        default: desc
+
